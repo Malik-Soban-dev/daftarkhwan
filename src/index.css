@@ -1,0 +1,738 @@
+@import "tailwindcss";
+
+/* ============================================================
+   DAFTARKHWAN — EDITORIAL DESIGN SYSTEM
+   Warm canvas · hairline structure · serif / mono / sans matrix
+   ============================================================ */
+
+@theme {
+  --font-display: "Cormorant Garamond", "Times New Roman", ui-serif, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+
+  --color-canvas: #f5f4f0;
+  --color-canvas-2: #ecebe5;
+  --color-ink: #1a1a18;
+  --color-ink-soft: #45453f;
+  /* Bronze tuned for better than 5:1 on the canvas; a lighter tint is used on dark surfaces. */
+  --color-accent: #7c5e3c;
+  --color-night: #1b1c18;
+  --color-night-soft: #272823;
+
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --spacing-gutter: clamp(1.25rem, 4vw, 3.5rem);
+  --spacing-plate: clamp(2rem, 5vw, 5.5rem);
+}
+
+:root {
+  --hair: rgba(26, 26, 24, 0.14);
+  --hair-strong: rgba(26, 26, 24, 0.28);
+  --gutter: clamp(1.25rem, 4vw, 3.5rem);
+}
+
+@layer base {
+  * {
+    border-color: var(--hair);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #f5f4f0;
+  }
+
+  body {
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: rgba(26, 26, 24, 0.88);
+    color: #f5f4f0;
+  }
+
+  ::-webkit-scrollbar {
+    width: 7px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f5f4f0;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(26, 26, 24, 0.24);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(26, 26, 24, 0.4);
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font-family: inherit;
+  }
+
+  select option {
+    color: #1a1a18;
+    background: #f5f4f0;
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--color-accent);
+    outline-offset: 4px;
+  }
+
+  section[id] {
+    scroll-margin-top: 7rem;
+  }
+
+  img {
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+}
+
+/* ---------- TYPE MATRIX ---------- */
+
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 300;
+  line-height: 0.9;
+  letter-spacing: -0.022em;
+  font-feature-settings: "liga" 1, "kern" 1;
+}
+
+@utility display-roman {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 0.94;
+  letter-spacing: -0.015em;
+}
+
+@utility mono {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.625rem;
+  line-height: 1.55;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+@utility mono-sm {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.6875rem;
+  line-height: 1.55;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+/* Keep the carousel's edge fades off the drawing during reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .carousel-track {
+    scroll-behavior: auto;
+  }
+}
+
+/* Wide tracking is a desktop luxury; on small screens it turns short labels
+   into overflow, so the measure is relaxed as the viewport narrows. */
+@media (max-width: 767px) {
+  .mono {
+    font-size: 0.59375rem;
+    letter-spacing: 0.17em;
+    line-height: 1.7;
+  }
+  .mono-sm {
+    font-size: 0.65625rem;
+    letter-spacing: 0.13em;
+    line-height: 1.7;
+  }
+}
+
+@utility copy {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.9375rem;
+  line-height: 1.9;
+  letter-spacing: 0.003em;
+  color: color-mix(in oklab, var(--color-ink) 84%, transparent);
+}
+
+@utility copy-lg {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: clamp(1.0625rem, 1.15vw, 1.3125rem);
+  line-height: 1.9;
+  color: color-mix(in oklab, var(--color-ink) 88%, transparent);
+}
+
+/* ---------- HAIRLINE SYSTEM ---------- */
+
+@utility hair-t {
+  border-top: 1px solid var(--hair);
+}
+@utility hair-b {
+  border-bottom: 1px solid var(--hair);
+}
+@utility hair-l {
+  border-left: 1px solid var(--hair);
+}
+@utility hair-r {
+  border-right: 1px solid var(--hair);
+}
+
+/* ---------- READABILITY FLOOR ----------
+   Secondary text should stay at roughly 4.5:1 or better on the canvas. The faintest
+   ink tints used across the layouts are lifted here; decorative marks opt out with
+   arbitrary values such as text-ink/[0.22]. Hover and group-hover variants still win. */
+@layer utilities {
+  html .text-ink\/25,
+  html .text-ink\/30,
+  html .text-ink\/35,
+  html .text-ink\/40,
+  html .text-ink\/45 {
+    color: color-mix(in oklab, var(--color-ink) 64%, transparent);
+  }
+  html .text-ink\/50,
+  html .text-ink\/55 {
+    color: color-mix(in oklab, var(--color-ink) 70%, transparent);
+  }
+  html .text-ink\/60,
+  html .text-ink\/65 {
+    color: color-mix(in oklab, var(--color-ink) 76%, transparent);
+  }
+}
+
+/* ---------- TEXTURE ---------- */
+
+.grain-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.4;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+}
+
+/* ---------- SURFACES ---------- */
+
+/* Text set over photography: light ink, a lifted accent and a soft shadow for legibility. */
+.image-surface {
+  --color-ink: #f5f4f0;
+  --color-accent: #dcbd8c;
+  --hair: rgba(245, 244, 240, 0.28);
+  --hair-strong: rgba(245, 244, 240, 0.45);
+  color: #f5f4f0;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.32);
+}
+
+.image-surface .display {
+  text-shadow:
+    0 2px 4px rgb(0 0 0 / 0.22),
+    0 12px 48px rgb(0 0 0 / 0.4);
+}
+
+.dark-surface {
+  --color-ink: #f5f4f0;
+  --color-accent: #dcbd8c;
+  --hair: rgba(245, 244, 240, 0.18);
+  --hair-strong: rgba(245, 244, 240, 0.36);
+  background: var(--color-night);
+  color: #f5f4f0;
+}
+
+/* Light panels that open on top of an image surface (menus, overlays). */
+.surface-light {
+  --color-ink: #1a1a18;
+  --color-accent: #7c5e3c;
+  --hair: rgba(26, 26, 24, 0.14);
+  --hair-strong: rgba(26, 26, 24, 0.28);
+  color: #1a1a18;
+  text-shadow: none;
+}
+
+/* Scrim behind hero text: darkest under the copy, the top band protects the navigation,
+   and the photograph stays clearly visible on the open side. */
+.scrim,
+.hero-shade {
+  background:
+    linear-gradient(180deg, rgb(12 13 11 / 0.55) 0%, rgb(12 13 11 / 0) 24%),
+    linear-gradient(90deg, rgb(12 13 11 / 0.82) 0%, rgb(12 13 11 / 0.6) 46%, rgb(12 13 11 / 0.28) 100%),
+    linear-gradient(0deg, rgb(12 13 11 / 0.74) 0%, rgb(12 13 11 / 0) 58%);
+}
+
+@media (max-width: 767px) {
+  .scrim,
+  .hero-shade {
+    background:
+      linear-gradient(180deg, rgb(12 13 11 / 0.6) 0%, rgb(12 13 11 / 0.2) 30%),
+      linear-gradient(0deg, rgb(12 13 11 / 0.9) 0%, rgb(12 13 11 / 0.62) 55%, rgb(12 13 11 / 0.48) 100%);
+  }
+}
+
+/* ---------- PHOTOGRAPHY ---------- */
+
+.photo {
+  filter: saturate(0.95) contrast(1.03);
+  transition:
+    filter 1.4s var(--ease-editorial),
+    transform 2s var(--ease-editorial),
+    opacity 1.4s var(--ease-editorial);
+}
+.group:hover .photo {
+  filter: saturate(1.02) contrast(1.04);
+}
+
+.gallery-image {
+  overflow: hidden;
+}
+.gallery-image img {
+  transition:
+    transform 1.8s var(--ease-editorial),
+    filter 1.4s var(--ease-editorial);
+}
+.gallery-image:hover img {
+  transform: scale(1.035);
+}
+
+@keyframes dk-hero-settle {
+  from {
+    transform: scale(1.07);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.page-hero-image {
+  animation: dk-hero-settle 9s var(--ease-editorial) both;
+}
+
+.hero-slide {
+  opacity: 0;
+  transform: scale(1.055);
+  transition:
+    opacity 1.6s var(--ease-editorial),
+    transform 8s var(--ease-editorial);
+}
+.hero-slide.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+.hero-slide-picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+}
+.hero-slide-picture img {
+  display: block;
+}
+
+.hero-progress {
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.hero-progress.is-active {
+  animation: dk-hero-progress 7s linear both;
+}
+@keyframes dk-hero-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ---------- MOTION ---------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 1.35s var(--ease-editorial),
+    transform 1.35s var(--ease-editorial);
+  will-change: opacity, transform;
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal-mask {
+  clip-path: inset(0 0 100% 0);
+  opacity: 0;
+  transition:
+    clip-path 1.5s var(--ease-editorial),
+    opacity 0.9s var(--ease-editorial);
+}
+.reveal-mask.is-in {
+  clip-path: inset(0 0 0 0);
+  opacity: 1;
+}
+
+.draw-x {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1.7s var(--ease-editorial);
+}
+.draw-x.is-in {
+  transform: scaleX(1);
+}
+
+@keyframes dk-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.menu-panel {
+  animation: dk-panel-in 0.6s var(--ease-editorial) both;
+}
+
+@keyframes dk-scroll-cue {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+.scroll-cue {
+  animation: dk-scroll-cue 2.8s var(--ease-editorial) infinite;
+}
+
+/* ---------- RESPONSIVE TABLES ----------
+   Data tables keep their full column model and scroll horizontally rather than
+   collapsing into cards. The edge fade tells small screens there is more. */
+.table-scroll {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+.table-scroll::-webkit-scrollbar {
+  height: 5px;
+}
+.table-scroll::-webkit-scrollbar-thumb {
+  background: rgba(26, 26, 24, 0.22);
+}
+.table-scroll table {
+  min-width: 40rem;
+}
+.table-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+/* Values that must never push a row wider than the screen. */
+.wrap-value {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Two-part label rows (kicker + note, label + value) sit on one line by design.
+   Below the tablet break they stack instead of colliding. Applied only here so
+   desktop spacing is untouched. */
+@media (max-width: 767px) {
+  .flex.items-baseline.justify-between {
+    flex-wrap: wrap;
+    row-gap: 0.55rem;
+    column-gap: 1.25rem;
+  }
+
+  .link-row {
+    padding-top: 1.55rem;
+    padding-bottom: 1.55rem;
+  }
+  .arrow-slide {
+    font-size: 1.35rem;
+  }
+
+  /* A full-width 4:5 portrait plate is taller than a phone screen; on small
+     viewports the crop is opened up so the picture stays a picture. */
+  .plate-tall {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (min-width: 768px) {
+  .plate-tall {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+/* ---------- CURTAIN DROP ----------
+   A solid panel covers each photograph and falls away as the frame scrolls
+   into view. The photograph itself is always laid out underneath, so nothing
+   can ever disappear — only the decorative panel moves.
+   Two mechanisms, layered so the effect cannot get stuck:
+   1. `is-in` (JS) transitions the panel away — the fallback path.
+   2. scroll-driven `animation-timeline: view()` where supported, which tracks
+      the scroll position directly and needs no script at all. */
+.img-curtain {
+  position: relative;
+}
+.img-curtain::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  /* Above any overlay copy, so a card's image and its type are revealed
+     together as one curtain rather than in two separate passes. */
+  z-index: 10;
+  background: var(--color-canvas-2);
+  transform: translateY(0);
+  transition: transform 1.15s var(--ease-editorial);
+  pointer-events: none;
+}
+.img-curtain.is-in::after {
+  transform: translateY(101%);
+}
+
+/* `scale` (not `transform`) so the hover zoom on .gallery-image keeps working. */
+.img-curtain > img {
+  scale: 1.12;
+  transition: scale 1.9s var(--ease-editorial);
+}
+.img-curtain.is-in > img {
+  scale: 1;
+}
+
+@keyframes dk-curtain-drop {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(101%);
+  }
+}
+@keyframes dk-curtain-settle {
+  from {
+    scale: 1.12;
+  }
+  to {
+    scale: 1;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .img-curtain::after {
+    animation: dk-curtain-drop linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 32%;
+    transition: none;
+  }
+  .img-curtain > img {
+    animation: dk-curtain-settle linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 48%;
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .img-curtain::after {
+    display: none;
+  }
+  .img-curtain > img {
+    scale: 1;
+  }
+}
+
+/* Logo marks are pulled to a single ink tone so white and black source files
+   read as one considered set rather than a scrapbook of brand colours. */
+/* ---------- LOGO CAROUSEL ----------
+   A single drifting track of marks that reads the same on a phone and a
+   desktop: native swipe on touch, arrows on pointer, auto-advance at rest. */
+.carousel-track {
+  display: flex;
+  align-items: stretch;
+  /* Matches the 1rem the carousel steps by, so each advance lands exactly on
+     the next item's snap point instead of drifting a little each time. */
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.carousel-track::-webkit-scrollbar {
+  display: none;
+}
+.carousel-item {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The track fades out at both edges so it reads as continuing, not clipped. */
+.carousel-frame {
+  position: relative;
+}
+.carousel-frame::before,
+.carousel-frame::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: clamp(1.75rem, 6vw, 5.5rem);
+  z-index: 2;
+  pointer-events: none;
+}
+.carousel-frame::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--color-canvas), transparent);
+}
+.carousel-frame::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--color-canvas), transparent);
+}
+.dark-surface .carousel-frame::before {
+  background: linear-gradient(90deg, var(--color-night), transparent);
+}
+.dark-surface .carousel-frame::after {
+  background: linear-gradient(270deg, var(--color-night), transparent);
+}
+
+.carousel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.75rem;
+  width: 2.75rem;
+  border: 1px solid var(--hair-strong);
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1;
+  color: var(--color-ink);
+  transition:
+    border-color 0.7s var(--ease-editorial),
+    color 0.7s var(--ease-editorial);
+}
+.carousel-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* Cells take the surface they sit on: opaque on the canvas, open on the dark
+   bands so the marks float rather than forming a bright board. */
+.logo-cell {
+  background: var(--color-canvas);
+}
+.dark-surface .logo-cell {
+  background: transparent;
+}
+
+.logo-mark {
+  /* brightness(0) collapses every source mark — white, black or full colour —
+     to one silhouette, so the wall reads as a single considered set. */
+  filter: brightness(0) saturate(100%);
+  opacity: 0.7;
+  transition: opacity 0.8s var(--ease-editorial);
+}
+.logo-cell:hover .logo-mark {
+  opacity: 1;
+}
+
+/* On the dark bands the mark is reversed out to the warm canvas tone. */
+.dark-surface .logo-mark {
+  filter: brightness(0) invert(1);
+  opacity: 0.66;
+}
+.dark-surface .logo-cell:hover .logo-mark {
+  opacity: 1;
+}
+.dark-surface .logo-cell .display-roman {
+  color: color-mix(in oklab, #f5f4f0 72%, transparent);
+}
+
+/* ---------- INTERACTION ---------- */
+
+.arrow-slide {
+  display: inline-block;
+  transition:
+    transform 0.9s var(--ease-editorial),
+    color 0.9s var(--ease-editorial);
+}
+.link-row:hover .arrow-slide {
+  transform: translateX(14px);
+  color: var(--color-accent);
+}
+.arrow-link:hover .arrow-slide {
+  transform: translateX(7px);
+  color: var(--color-accent);
+}
+
+.underline-fade {
+  position: relative;
+  display: inline-block;
+}
+.underline-fade::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 1px;
+  width: 100%;
+  background: var(--color-accent);
+  opacity: 0.8;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.8s var(--ease-editorial);
+}
+.underline-fade:hover::after,
+.arrow-link:hover .underline-fade::after,
+.group:hover .underline-fade::after,
+.underline-fade[data-active="true"]::after {
+  transform: scaleX(1);
+}
+
+.row-shift {
+  transition:
+    padding-left 0.9s var(--ease-editorial),
+    color 0.9s var(--ease-editorial);
+}
+.link-row:hover .row-shift {
+  padding-left: 1.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-mask,
+  .draw-x {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+  .scroll-cue,
+  .page-hero-image,
+  .menu-panel,
+  .hero-slide,
+  .hero-progress {
+    animation: none !important;
+    transition: none !important;
+  }
+}
