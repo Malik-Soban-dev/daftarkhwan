@@ -63,21 +63,16 @@ export default function HomeRefresh() {
       <section className="image-surface relative min-h-[100svh] overflow-hidden bg-night">
         <div className="absolute inset-0" aria-hidden="true">
           {heroSlides.map((item, index) => (
-            <picture
+            <Photo
               key={item.src}
-              className={cn("hero-slide hero-slide-picture", index === slide && "is-active")}
+              src={item.src}
+              alt={item.alt}
+              eager
+              frameClassName={cn("hero-slide absolute inset-0", index === slide && "is-active")}
             >
-              <img
-                src={item.src}
-                alt=""
-                loading="eager"
-                decoding="async"
-                fetchPriority={index === 0 ? "high" : "auto"}
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-            </picture>
+              <div className="hero-shade absolute inset-0 z-0" />
+            </Photo>
           ))}
-          <div className="hero-shade absolute inset-0" />
         </div>
 
         <div className="relative z-10 flex min-h-[100svh] flex-col justify-between px-gutter pt-[8.5rem] pb-8 md:pt-[10rem]">
@@ -340,7 +335,6 @@ export default function HomeRefresh() {
                 caption={plate.caption}
                 meta={plate.meta}
                 ratio={plate.ratio}
-                delay={i * 80}
                 className="gallery-image"
               />
             </div>

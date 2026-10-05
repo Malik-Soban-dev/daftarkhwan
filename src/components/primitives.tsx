@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "../lib/router";
-import { useInView } from "../lib/hooks";
+import { useEnteredViewport, useInView } from "../lib/hooks";
 import { hero, type ImgKey } from "../lib/media";
 import { cn } from "../utils/cn";
 
@@ -292,7 +292,6 @@ export function Photo({
   className,
   frameClassName,
   eager = false,
-  delay = 0,
   children,
 }: {
   src: string;
@@ -302,19 +301,13 @@ export function Photo({
   /** Class for the frame — set the aspect ratio / height here. */
   frameClassName?: string;
   eager?: boolean;
-  delay?: number;
   children?: React.ReactNode;
 }) {
-  const { ref, inView } = useInView<HTMLDivElement>(0.05);
+  const { ref, entered } = useEnteredViewport<HTMLDivElement>();
   return (
     <div
       ref={ref}
-      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
-      className={cn(
-        "img-curtain group relative overflow-hidden bg-canvas-2",
-        inView && "is-in",
-        frameClassName,
-      )}
+      className={cn("img-curtain group relative overflow-hidden bg-canvas-2", entered && "is-in", frameClassName)}
     >
       <img
         src={src}
@@ -335,7 +328,6 @@ export function Plate({
   alt,
   ratio = "aspect-[4/5]",
   className,
-  delay = 0,
   rounded = false,
 }: {
   src: string;
@@ -344,7 +336,6 @@ export function Plate({
   alt?: string;
   ratio?: string;
   className?: string;
-  delay?: number;
   rounded?: boolean;
 }) {
   return (
@@ -352,7 +343,6 @@ export function Plate({
       <Photo
         src={src}
         alt={alt ?? caption ?? ""}
-        delay={delay}
         frameClassName={cn(ratio, rounded && "img-rounded")}
       />
       {(caption || meta) && (
@@ -486,12 +476,11 @@ export function LogoCarousel({
               title={item.name}
             >
               {item.type === "mark" ? (
-                <img
+                <Photo
                   src={item.url}
                   alt={item.name}
-                  loading="lazy"
-                  decoding="async"
-                  className="logo-mark max-h-full max-w-full object-contain"
+                  frameClassName="logo-image h-full w-full"
+                  className="logo-mark object-contain"
                 />
               ) : (
                 <span className="display-roman px-2 text-center text-[clamp(0.85rem,1.5vw,1.25rem)] leading-[1.15] text-ink/[0.62]">
@@ -571,20 +560,13 @@ export function PageHero({
   const { navigate } = useRouter();
   return (
     <section className="image-surface relative isolate overflow-hidden bg-night">
-      <div className="absolute inset-0 -z-10" aria-hidden="true">
-        <img
-          src={hero(photo)}
-          alt=""
-          loading="eager"
-          decoding="async"
-          className="page-hero-image h-full w-full object-cover"
-        />
-        <div className="scrim absolute inset-0" />
-      </div>
+      <Photo src={hero(photo)} alt="" eager frameClassName="absolute inset-0 z-0 h-full w-full">
+        <div className="scrim absolute inset-0 z-0" />
+      </Photo>
 
       <div
         className={cn(
-          "flex flex-col justify-end px-gutter pt-[8.5rem] pb-[clamp(3rem,7vw,5.5rem)] md:pt-[10rem]",
+          "relative z-10 flex flex-col justify-end px-gutter pt-[8.5rem] pb-[clamp(3rem,7vw,5.5rem)] md:pt-[10rem]",
           compact ? "min-h-[clamp(30rem,70svh,44rem)]" : "min-h-[clamp(34rem,86svh,56rem)]",
         )}
       >

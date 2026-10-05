@@ -121,7 +121,6 @@ export default function Membership() {
               ratio={service.imageRatio}
               caption={service.name}
               meta={service.code}
-              delay={60}
             />
             <DataList
               items={[

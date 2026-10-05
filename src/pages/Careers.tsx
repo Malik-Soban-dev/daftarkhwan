@@ -96,7 +96,6 @@ export default function Careers() {
               ratio="aspect-[16/10]"
               caption="Huddle rooms at Daftarkhwan Vogue"
               meta="Lahore"
-              delay={100}
               className="gallery-image"
             />
           </div>

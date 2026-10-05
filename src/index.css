@@ -316,14 +316,10 @@
 
 .hero-slide {
   opacity: 0;
-  transform: scale(1.055);
-  transition:
-    opacity 1.6s var(--ease-editorial),
-    transform 8s var(--ease-editorial);
+  transition: opacity 1.6s var(--ease-editorial);
 }
 .hero-slide.is-active {
   opacity: 1;
-  transform: scale(1);
 }
 .hero-slide-picture {
   position: absolute;
@@ -482,71 +478,45 @@
 }
 
 /* ---------- CURTAIN DROP ----------
-   A solid panel covers each photograph and falls away as the frame scrolls
-   into view. The photograph itself is always laid out underneath, so nothing
-   can ever disappear — only the decorative panel moves.
-   Two mechanisms, layered so the effect cannot get stuck:
-   1. `is-in` (JS) transitions the panel away — the fallback path.
-   2. scroll-driven `animation-timeline: view()` where supported, which tracks
-      the scroll position directly and needs no script at all. */
+   `is-in` is set on the first viewport-intersection event. A single timed
+   transition is used everywhere: no separate desktop/mobile trigger paths. */
+/* No `position` here on purpose. The Photo component sets `relative` and callers
+   override it with `absolute inset-0` for background images. An unlayered
+   `position` rule would beat Tailwind's layered utilities and collapse every
+   background photograph to zero height. The ::after panel only needs the frame
+   to be positioned, which both values satisfy. */
 .img-curtain {
-  position: relative;
+  isolation: isolate;
+}
+
+/* On dark photographic surfaces the curtain and the pre-load backing are the
+   night tone, so a hero never flashes a pale panel behind light type. */
+.image-surface .img-curtain,
+.dark-surface .img-curtain {
+  --curtain-color: var(--color-night);
+  background-color: var(--color-night);
 }
 .img-curtain::after {
   content: "";
   position: absolute;
   inset: -1px;
-  /* Above any overlay copy, so a card's image and its type are revealed
-     together as one curtain rather than in two separate passes. */
-  z-index: 10;
-  background: var(--color-canvas-2);
+  z-index: 20;
+  background: var(--curtain-color, var(--color-canvas-2));
   transform: translateY(0);
-  transition: transform 1.15s var(--ease-editorial);
+  transition: transform 1s cubic-bezier(0.76, 0, 0.24, 1);
   pointer-events: none;
 }
 .img-curtain.is-in::after {
   transform: translateY(101%);
 }
 
-/* `scale` (not `transform`) so the hover zoom on .gallery-image keeps working. */
+/* Image scale begins at the same entry trigger; the frame itself stays still. */
 .img-curtain > img {
   scale: 1.12;
-  transition: scale 1.9s var(--ease-editorial);
+  transition: scale 1.4s var(--ease-editorial);
 }
 .img-curtain.is-in > img {
   scale: 1;
-}
-
-@keyframes dk-curtain-drop {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(101%);
-  }
-}
-@keyframes dk-curtain-settle {
-  from {
-    scale: 1.12;
-  }
-  to {
-    scale: 1;
-  }
-}
-
-@supports (animation-timeline: view()) {
-  .img-curtain::after {
-    animation: dk-curtain-drop linear both;
-    animation-timeline: view();
-    animation-range: entry 0% cover 32%;
-    transition: none;
-  }
-  .img-curtain > img {
-    animation: dk-curtain-settle linear both;
-    animation-timeline: view();
-    animation-range: entry 0% cover 48%;
-    transition: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -640,9 +610,19 @@
 /* Cells take the surface they sit on: opaque on the canvas, open on the dark
    bands so the marks float rather than forming a bright board. */
 .logo-cell {
+  --curtain-color: var(--color-canvas);
   background: var(--color-canvas);
 }
 .dark-surface .logo-cell {
+  --curtain-color: var(--color-night);
+  background: transparent;
+}
+
+.logo-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   background: transparent;
 }
 

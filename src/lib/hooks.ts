@@ -71,6 +71,87 @@ export function useInView<T extends HTMLElement>(threshold = 0.1, rootMargin = "
   return { ref, inView };
 }
 
+/** Reveal a photo on the first frame where its visible rectangle has area.
+ * Unlike the text reveal helper, this deliberately has no early root margin or
+ * timeout: the image curtain must never start before the user reaches the image. */
+export function useEnteredViewport<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [entered, setEntered] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    let settled = false;
+    let frame = 0;
+    let observer: IntersectionObserver | null = null;
+
+    const reveal = () => {
+      if (settled) return;
+      settled = true;
+      setEntered(true);
+      observer?.disconnect();
+      window.removeEventListener("scroll", scheduleCheck);
+      window.removeEventListener("resize", scheduleCheck);
+      window.visualViewport?.removeEventListener("scroll", scheduleCheck);
+      window.visualViewport?.removeEventListener("resize", scheduleCheck);
+    };
+
+    const check = () => {
+      frame = 0;
+      if (settled) return;
+      const rect = el.getBoundingClientRect();
+      const width = window.visualViewport?.width ?? window.innerWidth;
+      const height = window.visualViewport?.height ?? window.innerHeight;
+      const intersects = rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.right > 0 && rect.top < height && rect.left < width;
+      if (intersects) reveal();
+    };
+
+    function scheduleCheck() {
+      if (frame || settled) return;
+      frame = requestAnimationFrame(check);
+    }
+
+    if (typeof IntersectionObserver !== "undefined") {
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (
+            entries.some(
+              (entry) =>
+                entry.isIntersecting &&
+                entry.intersectionRect.width > 0 &&
+                entry.intersectionRect.height > 0,
+            )
+          ) {
+            reveal();
+          }
+        },
+        { threshold: 0, rootMargin: "0px" },
+      );
+      observer.observe(el);
+    }
+
+    // Also check directly and listen to scroll as a fallback for embedded
+    // browsers whose IntersectionObserver does not report reliably.
+    window.addEventListener("scroll", scheduleCheck, { passive: true });
+    window.addEventListener("resize", scheduleCheck, { passive: true });
+    window.visualViewport?.addEventListener("scroll", scheduleCheck, { passive: true });
+    window.visualViewport?.addEventListener("resize", scheduleCheck, { passive: true });
+    check();
+
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("scroll", scheduleCheck);
+      window.removeEventListener("resize", scheduleCheck);
+      window.visualViewport?.removeEventListener("scroll", scheduleCheck);
+      window.visualViewport?.removeEventListener("resize", scheduleCheck);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  return { ref, entered };
+}
+
 /** Window scroll offset, throttled through rAF — used by the chrome. */
 export function useScrollY() {
   const [y, setY] = useState(0);

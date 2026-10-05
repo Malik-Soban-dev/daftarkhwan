@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "../lib/router";
 import { useProgress, useScrollY } from "../lib/hooks";
-import { Mono, Reveal, Rule, TextLink } from "./primitives";
+import { Mono, Photo, Reveal, Rule, TextLink } from "./primitives";
 import { hero } from "../lib/media";
 import {
   amenities,
@@ -482,11 +482,10 @@ export function Footer() {
   return (
     <footer className="relative mt-[clamp(5rem,12vh,10rem)]">
       <div className="image-surface relative isolate overflow-hidden bg-night">
-        <div className="absolute inset-0 -z-10" aria-hidden="true">
-          <img src={hero("coworkingWide")} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
-          <div className="scrim absolute inset-0" />
-        </div>
-        <div className="px-gutter pt-[clamp(4rem,9vw,8rem)] pb-[clamp(2.5rem,5vw,4rem)]">
+        <Photo src={hero("coworkingWide")} alt="" frameClassName="absolute inset-0 z-0 h-full w-full">
+          <div className="scrim absolute inset-0 z-0" />
+        </Photo>
+        <div className="relative z-10 px-gutter pt-[clamp(4rem,9vw,8rem)] pb-[clamp(2.5rem,5vw,4rem)]">
           <span className="mono block text-canvas/90">Ready to move in?</span>
           <Reveal>
             <h2 className="display mt-6 text-[clamp(3rem,12.5vw,13rem)]">Daftarkhwan</h2>

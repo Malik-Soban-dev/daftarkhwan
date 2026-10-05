@@ -79,7 +79,7 @@ export default function Offering({ slug }: { slug: string }) {
               </Reveal>
             </div>
             <div className="hidden xl:col-span-4 xl:block">
-              <Plate src={framed(item.image, item.imageRatio)} ratio={item.imageRatio} alt={item.name} delay={150} />
+              <Plate src={framed(item.image, item.imageRatio)} ratio={item.imageRatio} alt={item.name} />
             </div>
           </div>
         </Matrix>
@@ -155,7 +155,6 @@ export default function Offering({ slug }: { slug: string }) {
                   src={photo(option.image, 1600, 1100)}
                   ratio="aspect-[16/11]"
                   alt={option.title}
-                  delay={i * 80}
                   className="gallery-image"
                 />
                 <Reveal delay={i * 80}>

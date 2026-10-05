@@ -151,7 +151,6 @@ export default function LocationDetail({ citySlug, slug }: { citySlug: string; s
                 caption={item.alt}
                 meta={String(i + 1).padStart(2, "0")}
                 alt={item.alt}
-                delay={i * 80}
                 className="gallery-image"
               />
             ))}
